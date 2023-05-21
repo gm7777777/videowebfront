@@ -1,0 +1,13 @@
+.headerNav-mid{
+    margin-left: 200px;
+}
+
+
+.headerNav-item{
+    margin-left:200px;
+    margin-right:150px;
+    font-size:larger;
+    font-weight:bolder;
+    /*color:#0e90d2;*/
+    /*color:#409EFF;*/
+}

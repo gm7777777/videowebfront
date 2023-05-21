@@ -1,7 +1,8 @@
 <template>
   <el-carousel :height="bannerHeight+'px'" style="margin: 0 auto; width: 100%; border-radius: 4px" indicator-position="outside">
-    <el-carousel-item v-for="i in imgs" :key="i">
-      <img :src="i" style="width: 100%" ref="bannerHeight" @load="imgLoad">
+    <el-carousel-item v-for="(i,index) in imgs" :key="i">
+      <!--<img :src="i" style="width: 100%" ref="bannerHeight" @load="imgLoad"  @click="showSelectVideo(i)">-->
+      <img :src="i" style="width: 100%" ref="bannerHeight" @load="imgLoad"  @click="showSelectVideo(index)">
     </el-carousel-item>
   </el-carousel>
 </template>
@@ -31,21 +32,25 @@ export default {
     },
 
     mounted() {
-          this.imgLoad();
-            window.addEventListener('resize',() => {
-                this.bannerHeight=this.$refs.bannerHeight[0].height;
-                this.imgLoad();
-            },false)
-        },
+        this.imgLoad();
+        window.addEventListener('resize',() => {
+            this.bannerHeight=this.$refs.bannerHeight[0].height;
+        this.imgLoad();
+    },false)
+    },
 
     methods: {
-          imgLoad(){
+        imgLoad(){
             this.$nextTick(()=>{
-              this.bannerHeight=this.$refs.bannerHeight[0].height;
-                console.log(this.$refs.bannerHeight[0].height);
-            })
-          },
-          }
+                this.bannerHeight=this.$refs.bannerHeight[0].height;
+            console.log(this.$refs.bannerHeight[0].height);
+        })
+        },
+        showSelectVideo(index) {
+            this.$router.push({path: '/productcenterdetail/' + index});
+
+        }
+    }
 }
 
 </script>
@@ -66,4 +71,5 @@ export default {
 .el-carousel__item:nth-child(2n + 1) {
   background-color: white;
 }
+
 </style>

@@ -3,7 +3,8 @@
     <el-container >
       <el-header style="width: 100%; position: sticky; border-bottom: 1px solid #dcdfe6; top: 0; left: 0; z-index:1000; padding: 0">
       <div class="sakura-header">
-        <SakuraMenu/>
+        <!--<SakuraMenu/>-->
+        <Header/>
       </div>
       </el-header>
       <el-main style="overflow: hidden; top: 0; left: 0; padding: 0;">
@@ -19,8 +20,9 @@
         </div>
         
       </el-main>
-      <el-footer style="padding: 0">
-        <FooterVue/>
+      <el-footer  >
+        <!--<FooterVue/>-->
+        <Footer/>
       </el-footer>
     </el-container>
   </div>
@@ -33,6 +35,8 @@ import FooterVue from './components/Footer.vue'
 import MovDetailPageVue from './views/MovDetailPage.vue'
 import MovieKeywordPageVue from './views/MovieKeywordPage.vue'
 import LoginVue from './views/Login.vue'
+import Footer from './components/common/Footer.vue'
+import Header from './components/common/Header.vue'
 
 export default {
   name: 'App',
@@ -42,7 +46,9 @@ export default {
     FooterVue,
     MovDetailPageVue,
     MovieKeywordPageVue,
-    LoginVue
+    LoginVue,
+      Footer,
+      Header
   },
 
   computed: {
@@ -54,3 +60,12 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+  /*.el-footer{*/
+    /*width: 100%;*/
+    /*background: url(../images/footer.jpg);*/
+    /*background-size: cover;*/
+    /*position: relative*/
+  /*}*/
+</style>

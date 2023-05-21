@@ -36,6 +36,18 @@ const routes = [
     component: () => import('../views/MovDetailPage.vue'),
     props: true
   },
+{
+    path: '/productcenterdetail/:p_id',
+        name: 'productcenterdetail',
+    component: () => import('../views/ProductCenterDetail.vue'),
+    props: true
+},
+{
+    path: '/productcenter',
+        name: 'productcenter',
+    component: () => import('../views/ProductCenter.vue'),
+    props: true
+},
 ];
 
 
