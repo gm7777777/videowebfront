@@ -13,7 +13,7 @@
       <el-menu-item style="height:100%;">
           <img src="../../assets/images/logo.png" style="height:100%" alt="">
       </el-menu-item>
-      <el-menu-item style="margin-right:200px">
+      <el-menu-item style="margin-right:100px">
           <i style="color:#7c6aa6" class="contact-icon am-icon-map-marker"></i>
           <div class="item">
               <strong>电栈网络科技</strong>
