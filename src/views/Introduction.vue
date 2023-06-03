@@ -1,11 +1,11 @@
 <template>
     <div style="display:flex;">
         <div class="left-intro">
-            <label style="width:100%;padding-top:10px">个人介绍</label>
+            <label style="width:100%;padding-top:10px">计算机白丁的个人介绍</label>
             <img :src="selfsrc" style="width:80%;padding:10px;"/>
             <p style="font-size:smaller;padding: 10px;">{{years}}年IT业从业经历，先后工作于金蝶，用友，新华三，中国建设银行等知名IT企业，历任项目经理，系统架构师，全栈工程师，技术经理，技术负责人
             ，在金融，AI，云计算，企业数字化转型，大数据领域有丰富经验,个人技术覆盖前台，后台，运维，数据处理，业务设计，架构设计，图形算法，嵌入式，系统内核等，开发语言全栈包括,C++,Java python,go,javascript,vue，web端，android/ios手机，熟悉各种框架及建模思想，中台，DDD,SOA,EJB等</p>
-            <p style="font-size:smaller;">邮箱:119618949@qq.com</p>
+            <p style="font-size:smaller;">邮箱:elec_stack@126.com</p>
         </div>
 
         <el-tabs v-model="activeName" @tab-click="handleClick" class="eltabpane" style="width:100%;background:transparent;" type="border-card">

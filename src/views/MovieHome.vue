@@ -29,7 +29,7 @@
         <div class="am-g">
           <div class="am-u-md-3" v-for="(advantage,index) in advantageList" :key="index">
             <div class="features_item" @click="patharea(advantage.id)">
-              <img :src="advantage.cover" alt="">
+              <img :src="advantage.cover" alt="" style="width:100%">
               <h3 class="features_item--title">{{advantage.title}}</h3>
               <p class="features_item--text">{{advantage.desc}}</p>
             </div>
@@ -83,25 +83,25 @@ export default {
             advantageList: [
                 {
                     id: "introduction",
-                    cover: 'src/assets/images/index/f01.jpg',
+                    cover: 'src/assets/images/background/portrait.jpg',
                     title: '作品介绍',
-                    desc: '用户可快速学习适配开发，通过丰富的组件库完成页面功能的移动化适配。'
+                    desc: '作者个人的项目案例与产品展示'
                 },
                 {
                     id: "onlinebooks",
-                    cover: 'src/assets/images/index/f01.jpg',
+                    cover: 'src/assets/images/background/books_apple_hires.jpg',
                     title: '在线图书',
-                    desc: '用户可快速学习适配开发，通过丰富的组件库完成页面功能的移动化适配。'
+                    desc: '作者个人认为写的不错并值得分享的一些书籍'
                 },
                 {
                     id: "askanswer",
                     cover: 'src/assets/images/index/f01.jpg',
                     title: '知识问答',
-                    desc: '用户可快速学习适配开发，通过丰富的组件库完成页面功能的移动化适配。'
+                    desc: '分享与解答来自网友的各个技术板块的问题'
                 },
                 {
                     id: "productcenter",
-                    cover: 'src/assets/images/index/f01.jpg',
+                    cover: 'src/assets/images/background/productcenter.jpg',
                     title: '产品中心',
                     desc: '目前暂不可用'
                 },

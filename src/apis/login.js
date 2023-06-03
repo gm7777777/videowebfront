@@ -13,7 +13,7 @@ export function register(data) {
 // 登录
 export default function login(data) {
     return httpRequest({
-		url: '/auth/login',
+		url: '/Auth/login',
 		method: 'post',
 		data: data,
 	})

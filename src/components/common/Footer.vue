@@ -28,7 +28,7 @@
 					<div class="footer_main--column">
 						<strong class="footer_main--column_title">联系详情</strong>
 						<ul class="footer_contact_info">
-							<li class="footer_contact_info--item"><i class="am-icon-phone"></i><span>服务邮箱：119618949@qq.com</span></li>
+							<li class="footer_contact_info--item"><i class="am-icon-phone"></i><span>服务邮箱：elec_stack@126.com</span></li>
 							<li class="footer_contact_info--item"><i class="am-icon-map-marker"></i><span>陕西省西安市</span></li>
 							<li class="footer_contact_info--item"><i class="am-icon-clock-o"></i><span>周一 ~ 周日, 8:00 - 23:00 </span></li>
 						</ul>

@@ -22,7 +22,7 @@
       >
 
       <el-menu-item style="height:100%;">
-          <img src="../../assets/images/logo.png" style="height:100%" alt="">
+          <img src="../../assets/Label.jpg" style="height:100%" alt="">
       </el-menu-item>
       <el-menu-item style="">
           <el-icon>
