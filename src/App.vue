@@ -1,7 +1,7 @@
 <template>
   <div class="common-layout">
     <el-container >
-      <el-header style="width: 100%; position: sticky; border-bottom: 1px solid #dcdfe6; top: 0; left: 0; z-index:1000; padding: 0">
+      <el-header style="--el-header-padding:0px;width: 100%; position: sticky; border-bottom: 1px solid #dcdfe6; top: 0; left: 0; z-index:1000; padding: 0">
       <div class="sakura-header">
         <!--<SakuraMenu/>-->
         <Header/>
@@ -20,6 +20,7 @@
         </div>
         
       </el-main>
+      <!--<Icon type="ios-loading" size=18 class="demo-spin-icon-load"></Icon>-->
       <el-footer  >
         <!--<FooterVue/>-->
         <Footer/>
@@ -37,7 +38,10 @@ import MovieKeywordPageVue from './views/MovieKeywordPage.vue'
 import LoginVue from './views/Login.vue'
 import Footer from './components/common/Footer.vue'
 import Header from './components/common/Header.vue'
+import axios from 'axios';
 
+
+// Vue.prototype.$axios = axios;
 export default {
   name: 'App',
   components: {
@@ -48,7 +52,9 @@ export default {
     MovieKeywordPageVue,
     LoginVue,
       Footer,
-      Header
+      Header,
+      axios,
+
   },
 
   computed: {

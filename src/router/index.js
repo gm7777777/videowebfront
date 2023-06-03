@@ -48,6 +48,43 @@ const routes = [
     component: () => import('../views/ProductCenter.vue'),
     props: true
 },
+{
+    path: '/onlinebooks',
+        name: 'onlinebooks',
+    component: () => import('../views/OnlineBooks.vue'),
+    props: true
+},
+{
+    path: '/introduction',
+        name: 'introduction',
+    // component: () => import('../views/IntroductionViewer.vue'),
+    component: () => import('../views/Introduction.vue'),
+    props: true
+},
+{
+    path: '/askanswer',
+        name: 'askanswer',
+    component: () => import('../views/AskAnswerViewer.vue'),
+    props: true
+},
+{
+    path: '/topiceditoradd/:status',
+        name: 'topiceditoradd',
+    component: () => import('../views/TopicEditor.vue'),
+    props: true
+},
+{
+    path: '/topiceditor/:topic_id/:status',
+        name: 'topiceditor',
+    component: () => import('../views/TopicEditor.vue'),
+    props: true
+},
+{
+    path: '/activate',
+        name: 'activate',
+    component: () => import('../views/Activate.vue'),
+    props: true
+}
 ];
 
 

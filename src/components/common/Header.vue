@@ -1,40 +1,59 @@
 <template>
-  <el-menu
-    :default-active="activeIndex"
-    background-color="white"
-    text-color="black"
-    active-text-color="#24b8f2"
-    :router="true"
-    class="el-menu-demo"
-    mode="horizontal"
-    :ellipsis="true"
-    @select="handleSelect"
-  >
+  <!--<el-menu-->
+    <!--:default-active="activeIndex"-->
+    <!--background-color="white"-->
+    <!--text-color="black"-->
+    <!--active-text-color="#24b8f2"-->
+    <!--:router="true"-->
+    <!--class="el-menu-demo"-->
+    <!--mode="horizontal"-->
+    <!--:ellipsis="true"-->
+    <!--@select="handleSelect"-->
+  <!--&gt;-->
+      <el-menu
+              :default-active="activeIndex"
+              background-color="white"
+              text-color="black"
+              active-text-color="#24b8f2"
+              :router="true"
+              class="el-menu-demo"
+              mode="horizontal"
+              :ellipsis="true"
+      >
+
       <el-menu-item style="height:100%;">
           <img src="../../assets/images/logo.png" style="height:100%" alt="">
       </el-menu-item>
-      <el-menu-item style="margin-right:100px">
-          <i style="color:#7c6aa6" class="contact-icon am-icon-map-marker"></i>
+      <el-menu-item style="">
+          <el-icon>
+              <location-information />
+          </el-icon>
+          <!--<i style="color:#7c6aa6" class="el-icon-location"></i>-->
           <div class="item">
-              <strong>电栈网络科技</strong>
-              <span>股份有限公司</span>
+              <!--<strong>电栈网络科技</strong>-->
+              <!--<span>股份有限公司</span>-->
+              <strong>计算机白丁</strong>
+              <span>的个人网站</span>
           </div>
       </el-menu-item>
 
 
-
-
-
-
           <el-menu-item class="headerNav-item" style="color:#0e90d2;" index="/">网站首页</el-menu-item>
 
-          <el-menu-item class="headerNav-item" style="color:#0e90d2;" index="/productcenter">产品中心</el-menu-item>
+          <!--<el-menu-item class="headerNav-item" style="color:#0e90d2;" index="/about">个人介绍</el-menu-item>-->
+            <!--个人介绍与作品介绍分成-->
+          <el-menu-item class="headerNav-item" style="color:#0e90d2;" index="/introduction">作品介绍</el-menu-item>
 
-          <el-menu-item class="headerNav-item" style="color:#0e90d2;" index="/example">客户案例</el-menu-item>
+          <!--<el-menu-item class="headerNav-item" style="color:#0e90d2;" index="/prouctcenter">产品中心</el-menu-item>-->
 
-          <el-menu-item class="headerNav-item" style="color:#0e90d2;" index="/news">公司动态</el-menu-item>
+          <!--<el-menu-item class="headerNav-item" style="color:#0e90d2;" index="/news">在线图书</el-menu-item>-->
+          <el-menu-item class="headerNav-item" style="color:#0e90d2;" index="/onlinebooks">在线图书</el-menu-item>
+          <el-menu-item class="headerNav-item" style="color:#0e90d2;" index="/askanswer">知识问答</el-menu-item>
 
-          <el-menu-item class="headerNav-item" style="color:#0e90d2;" index="/about">关于我们</el-menu-item>
+          <!--<el-menu-item class="headerNav-item" style="color:#0e90d2;" index="/news">知识问答</el-menu-item>-->
+
+          <!--<el-menu-item class="headerNav-item" style="color:#0e90d2;" index="/about">关于我们</el-menu-item>-->
+
 
 
 
@@ -77,7 +96,7 @@
           </template>
         </el-dropdown>
 
-        <el-button link type="primary" class="login" style="margin: 15px 11px; font-size:medium;color: black;border-style:solid;border-color:#409EFF"  v-else @click="login">
+        <el-button link type="primary" class="login" style="margin: 20px 11px; font-size:medium;color: black;border-style:solid;border-color:#409EFF"  v-else @click="login">
             登录/注册
         </el-button>
     </div>

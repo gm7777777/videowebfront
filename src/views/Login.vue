@@ -3,16 +3,24 @@
     <div class="login-container">
       <div class="head">
         <div class="name">
-          <div class="title">Avalon</div>
-          <div class="tips">动漫、视频交流分享网站</div>
+          <div class="title">计算机白丁的个人网站</div>
+          <div class="tips">{{title}}</div>
         </div>
       </div>
       <el-form label-position="top" :rules="rules" :model="ruleForm" ref="loginForm" class="login-form">
-        <el-form-item label="账号" prop="username">
+        <el-form-item label="账号*" prop="username">
           <el-input type="text" v-model.trim="ruleForm.username" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="password">
           <el-input type="password" v-model.trim="ruleForm.password" autocomplete="off"></el-input>
+        </el-form-item>
+
+        <el-form-item label="邮箱*" prop="email" v-if="!haveAccount">
+          <el-input type="text" v-model.trim="ruleForm.email" autocomplete="off"></el-input>
+        </el-form-item>
+
+        <el-form-item label="电话*" prop="phone" v-if="!haveAccount">
+          <el-input type="text" v-model.trim="ruleForm.phonenum" autocomplete="off"></el-input>
         </el-form-item>
 
         <el-form-item v-if="haveAccount">
@@ -47,9 +55,12 @@ export default {
     const state = reactive({
       ruleForm: {
         username: '',
-        password: ''
+        password: '',
+          email:'',
+          phonenum:''
       },
       checked: true,
+        title:"登陆",
       rules: {
         username: [
           { required: 'true', message: '账户不能为空', trigger: 'blur' }
@@ -86,6 +97,8 @@ export default {
     }
 
     const submitRegisterForm =  async () => {
+          // this.$router.push({path: '/activate'});
+          window.location.href = '/#/activate'
         // 执行注册账户操作
       loginForm.value.validate((valid) => {
         if (valid) {
@@ -102,7 +115,6 @@ export default {
                 // setTimeout(() => {
                 //     haveAccount = true
                 // }, 4000);
-                
             } else {
                 ElMessage({
                 message: res.data.message,
@@ -115,6 +127,7 @@ export default {
           return false;
         }
       })
+          // this.$router.push({path: '/activate'});
     }
 
     const resetForm = () => {
@@ -134,7 +147,8 @@ export default {
 
   methods: {
     registerAccount() {
-        this.haveAccount = false
+        this.haveAccount = false;
+        this.title="注册";
     }
   }
 }
@@ -152,7 +166,7 @@ export default {
   }
   .login-container {
     width: 420px;
-    height: 500px;
+    height: 600px;
     background-color: #fff;
     border-radius: 4px;
     box-shadow: 0px 21px 41px 0px rgba(0, 0, 0, 0.2);
