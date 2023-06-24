@@ -13,6 +13,7 @@ import './assets/css/style.css'
 import axios from 'axios'
 import VueAxios from "vue-axios";
 
+
 // import { Editor, Toolbar } from '/wangeditor/editor-for-vue';
 // import Vue from 'vue';
 // import "swiper/swiper.min.css"
@@ -34,3 +35,4 @@ app.use(store)
 app.use(vue3videoPlay)
 // app.use(axios)
 app.mount('#app')
+

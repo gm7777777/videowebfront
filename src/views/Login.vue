@@ -11,7 +11,7 @@
         <el-form-item label="账号*" prop="username">
           <el-input type="text" v-model.trim="ruleForm.username" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="密码" prop="password">
+        <el-form-item label="密码*" prop="password">
           <el-input type="password" v-model.trim="ruleForm.password" autocomplete="off"></el-input>
         </el-form-item>
 
@@ -30,7 +30,20 @@
         </el-form-item>
 
         <el-form-item v-else>
-          <el-button style="width: 100%" type="primary" @click="submitRegisterForm">注册</el-button>
+          <el-tooltip
+                  effect="dark"
+                  :content="warningsubmit"
+                  placement="bottom"
+          >
+          <el-button style="width: 100%;margin:5px" type="primary" @click="submitRegisterForm">注册</el-button>
+          </el-tooltip>
+          <el-tooltip
+                  effect="dark"
+                  :content="warningauth"
+                  placement="bottom"
+          >
+          <el-button style="width: 100%;margin:5px;" type="primary" @click="submitRegisterForm">再次授权</el-button>
+          </el-tooltip>
         </el-form-item>
       </el-form>
     </div>
@@ -45,6 +58,7 @@ import { localSet } from '../utils'
 import login from '../apis/login'
 import { register } from '../apis/login'
 import { ElMessage } from 'element-plus'
+// import { useStore } from 'vuex'
 
 export default {
   name: 'Login',
@@ -59,6 +73,8 @@ export default {
           email:'',
           phonenum:''
       },
+        warningsubmit:"初次注册请点击进入授权码验证环节!",
+        warningauth:"初次注册无须点击,此按钮会再次发送用户授权邮件!",
       checked: true,
         title:"登陆",
       rules: {
@@ -76,15 +92,19 @@ export default {
       loginForm.value.validate((valid) => {
         if (valid) {
           login({
-            name: state.ruleForm.username || '',
-            password: state.ruleForm.password
+              ctxBody: {
+              name: state.ruleForm.username || '',
+              password: state.ruleForm.password
+          }
           }).then(res => {
-            if (res.data.code == 200) {
-                localSet('token', res.data.token)
+            if (res.code == 200&&res.status==0) {
+                // localSet('token', res.data.token)
+                localSet('token', res.data.data);
+                localSet('user', state.ruleForm.username);
                 window.location.href = '/'
             } else {
                 ElMessage({
-                message: res.data.message,
+                message: res.msg,
                 type: 'warning',
                 })
             }
@@ -98,32 +118,41 @@ export default {
 
     const submitRegisterForm =  async () => {
           // this.$router.push({path: '/activate'});
-          window.location.href = '/#/activate'
+
         // 执行注册账户操作
       loginForm.value.validate((valid) => {
         if (valid) {
           register({
-            name: state.ruleForm.username,
-            password: state.ruleForm.password
+              ctxBody: {
+                  name: state.ruleForm.username,
+                  password: state.ruleForm.password,
+                  email: state.ruleForm.email,
+                  phonenum: state.ruleForm.phonenum
+              }
           }).then(res => {
-            if (res.data.code == 200) {
+            if (res.code == 200) {
                 ElMessage({
-                message: res.data.message,
+                message: res.msg,
                 type: 'success',
                 })
                 haveAccount.value = true
+                localSet('user', state.ruleForm.username);
+                window.location.href = '/#/activate'
                 // setTimeout(() => {
                 //     haveAccount = true
                 // }, 4000);
             } else {
                 ElMessage({
-                message: res.data.message,
+                message: res.msg,
                 type: 'warning',
                 })
             }
           })
         } else {
-          console.log('error register!!')
+              ElMessage({
+                            message: "error register",
+            type: 'warning',
+            })
           return false;
         }
       })
@@ -166,7 +195,7 @@ export default {
   }
   .login-container {
     width: 420px;
-    height: 600px;
+    height: 650px;
     background-color: #fff;
     border-radius: 4px;
     box-shadow: 0px 21px 41px 0px rgba(0, 0, 0, 0.2);
@@ -200,7 +229,7 @@ export default {
   .el-form--label-top .el-form-item__label {
     padding: 0;
   }
-  .login-form .el-form-item {
-    margin-bottom: 12px;
-  }
+  /*.login-form .el-form-item {*/
+    /*margin-bottom: 12px;*/
+  /*}*/
 </style>

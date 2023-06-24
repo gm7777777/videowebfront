@@ -64,23 +64,62 @@
 </template>
 
 <script>
-
+    import {auth} from '../apis/login'
+    import { ElMessage } from 'element-plus'
+    import { localGet } from '../utils'
 export default {
   name: 'Activate',
+    setup(){
+        const authcode = function(){
+            auth({ctxBody: {name:localGet('user'),num1:this.data1,num2:this.data2,num3:this.data3,num4:this.data4,num5:this.data5,num6:this.data6}}).then(res=>{
+                if(res.code==200){
+                ElMessage({
+                    message: res.msg,
+                    type: 'success',
+                })
+                window.location.href = '/'
+            }else{
+                ElMessage({
+                    message: res.msg,
+                    type: 'error',
+                })
+            }
+        })}
+
+        return {
+            authcode
+        }
+
+
+    },
   data(){
     return {
-        data1:"",
-        data2:"",
-        data3:"",
-        data4:"",
-        data5:"",
-        data6:"",
+        data1:'',
+        data2:'',
+        data3:'',
+        data4:'',
+        data5:'',
+        data6:'',
     }
   },
   watch:{
-    data6(val){
+    data6(val,old){
         if(this.data1!=null&&this.data2!=null&&this.data3!=null&&this.data4!=null&&this.data5!=null&&this.data6!=null){
-
+            this.authcode();
+          // auth({ctxBody: {num1:this.data1,num2:this.data2,num3:this.data3,num4:this.data4,num5:this.data5,num6:this.data6}}).then(res=>{
+          //     if(res.code==200){
+          //       ElMessage({
+          //           message: res.msg,
+          //           type: 'success',
+          //       })
+          //       window.location.href = '/'
+          //     }else{
+          //       ElMessage({
+          //           message: res.msg,
+          //           type: 'error',
+          //       })
+          //   }
+          // })
         }
     }
   },

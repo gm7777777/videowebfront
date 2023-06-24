@@ -5,7 +5,7 @@ const token = localGet('token')
 
 // 创建一个 axios 实例
 const service = axios.create({
-	baseURL: 'http://127.0.0.1:5007', // 所有的请求地址前缀部分
+	baseURL: 'http://192.168.0.131:5007', // 所有的请求地址前缀部分
 	// baseURL: 'http://139.196.138.236:5000',
 	timeout: 60000, // 请求超时时间毫秒
 	withCredentials: true, // 异步请求携带cookie
@@ -16,6 +16,7 @@ const service = axios.create({
 		'X-Requested-With': 'XMLHttpRequest',
 	},
 })
+
 
 // 添加请求拦截器
 service.interceptors.request.use(
@@ -29,6 +30,8 @@ service.interceptors.request.use(
 		return Promise.reject(error)
 	}
 )
+
+
 
 // 添加响应拦截器
 service.interceptors.response.use(
@@ -49,6 +52,7 @@ service.interceptors.response.use(
 		return Promise.reject(error)
 	}
 )
+
 
 export default service
 

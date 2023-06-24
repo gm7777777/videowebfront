@@ -37,7 +37,7 @@ const routes = [
     props: true
   },
 {
-    path: '/productcenterdetail/:p_id',
+    path: '/productcenterdetail/:case_id',
         name: 'productcenterdetail',
     component: () => import('../views/ProductCenterDetail.vue'),
     props: true
@@ -83,6 +83,18 @@ const routes = [
     path: '/activate',
         name: 'activate',
     component: () => import('../views/Activate.vue'),
+    props: true
+},
+{
+    path: '/caseeditor',
+        name: 'caseeditor',
+    component: () => import('../views/CaseEditor.vue'),
+    props: true
+},
+{
+    path: '/readereditor',
+        name: 'readereditor',
+    component: () => import('../views/DocReaderEditor.vue'),
     props: true
 }
 ];

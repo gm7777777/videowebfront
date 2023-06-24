@@ -20,7 +20,6 @@
               class="filter-tree"
               :data="data"
               :props="defaultProps"
-              default-expand-all
               :filter-node-method="filterNode"
               ref="tree"
               node-key="id"
@@ -29,44 +28,100 @@
       >
       </el-tree>
     </div>
-    <DocumentViewer :src="fileUrl" style="height:1000px"></DocumentViewer>
+    <!--<PdfViewer :url="pdfUrl"></PdfViewer>-->
+    <!--<pdf :url="pdfUrl" :type="'canvas'" :pdfjsDistPath="'/static'" />-->
+    <!--<DocumentViewer :src="fileUrl" style="height:1000px"></DocumentViewer>-->
     <!--<pdf  style="width:75%"-->
             <!--ref="pdf"-->
             <!--:src="pdfurl"-->
     <!--&gt;-->
     <!--</pdf>-->
+    <!--<PdfViewer-->
+            <!--page-scale="page-fit"-->
+            <!--:width="800"-->
+            <!--:height="700"-->
+            <!--theme="dark"-->
+            <!--:src="pdfUrl"-->
+            <!--@loaded="onLoaded" />-->
+    <PdfViewer
+            page-scale="page-fit"
+            :width="1000"
+            :height="800"
+            theme="dark"
+            :src="pdfUrl"/>
   </div>
 
 </template>
 
 <script>
-    import DocumentViewer from '../components/DocumentViewer.vue'
+    // import DocumentViewer from '../components/DocumentViewer.vue';
+    import {docs} from '../apis/readerdoc';
+    import { localGet } from '../utils';
+
+
+    import PdfViewer from '../components/PdfViewer.vue'
+    // import pdf from "../components/PDF/pdf";
+    // import PDF from 'pdfjs-dist'
+    // PDF.disableWorker = true
 export default {
   name: 'OnlineBooks',
     components: {
-        DocumentViewer,
+        // DocumentViewer,pdf,
+        // pdf
+        PdfViewer
+
+    },
+    mounted(){
+      this.loadData();
+      // this.loadFile(this.pdfUrl);
+        if(null==localGet("user")){
+            this.pdfUrl='http://localhost:5007/docs/Login.pdf';
+        }
+
     },
     methods: {
+      async loadData(){
+        docs({ctxBody:{
+            user:localGet('user'),
+
+            }}).then(
+            (res) => {
+            // console.log(res.data)
+            if(res.code == 200){
+            // this.sectors = res.data;
+            this.data = res.data;
+            // console.log(this.user)
+        }else{
+            ElMessage({
+                message: res.message,
+                type: 'warning',
+            })
+        }
+    })
+    },
         filterNode(value, data) {
             if (!value) return true
             return data.label.indexOf(value) !== -1
         },
         handleNodeClick(data) {
             if(data['children'] == null){
-                this.fileUrl = data['url'];
+                this.pdfUrl = data['data'];
             }
 
-        },
+        }
+
     },
     watch: {
         filterText(val) {
             this.$refs.tree.filter(val)
         },
     },
-    data() {
+    data(){
         return {
+            pdfUrl:'http://localhost:5007/docs/Empty.pdf',
             filterText: '',
-            data: [
+            data:[],
+            datatemp: [
                 {
                     id: 1,
                     label: '一级 1',
@@ -78,12 +133,12 @@ export default {
                                 {
                                     id: 9,
                                     label: '朱自清',
-                                    url: "https://view.xdocin.com/demo/view.docx",
+                                    data: "https://view.xdocin.com/demo/view.docx",
                                 },
                                 {
                                     id: 10,
                                     label: 'Linux内核设计与实现原书第三版',
-                                    url:"src/assets/book/Linux内核设计与实现原书第三版.pdf",
+                                    data:"src/assets/book/Linux内核设计与实现原书第三版.pdf",
                                 },
                             ],
                         },
@@ -119,10 +174,12 @@ export default {
                 },
             ],
             defaultProps: {
+                id:'id',
+                data:'data',
                 children: 'children',
                 label: 'label',
             },
-            fileUrl: "https://view.xdocin.com/demo/view.docx",
+            // fileUrl: "https://view.xdocin.com/demo/view.docx",
         }
     }
 }
@@ -136,4 +193,5 @@ export default {
     border-right: 2px solid slategray;
     text-align:center;
   }
+
 </style>

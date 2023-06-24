@@ -1,8 +1,9 @@
 <template>
     <div style="height:100%;">
-        <el-carousel :interval="4000" type="card" height="200px" style="border: 1px solid #ccc;">
-            <el-carousel-item v-for="item in tableData" :key="item">
-                <h3 text="2xl" justify="center">{{ item }}</h3>
+        <el-carousel :interval="4000" type="card" height="300px" style="border: 1px solid #ccc;">
+            <el-carousel-item v-for="item in tableDataRec" :key="item">
+                <!--<h3 text="2xl" justify="center">{{ item }}</h3>-->
+                <img :src="item.logosrc" style="width:100%;height:300px" ref="bannerHeight"  @click="showSelectVideo(item.id)">
             </el-carousel-item>
         </el-carousel>
         <div style="height:30px;width:100%;margin:5px">
@@ -18,38 +19,39 @@
                 size="large"
                 placeholder="查询"
                 :prefix-icon="Search"
+                @click="loadQues(selectedTab,1)"
         >
                 <template #suffix>
-                    <el-icon><Search /></el-icon>
+                    <el-icon ><Search /></el-icon>
                 </template>
             </el-input>
 
         </div>
-        <el-tabs :tab-position="tabPosition" style="width:100%;padding:1px;background:transparent;" >
-            <el-tab-pane label="大数据" >
-                <QuestTables :dataList="tableData" :editstatus="isedit">
+        <el-tabs :tab-position="tabPosition" v-model="selectedTab" style="width:100%;padding:1px;background:transparent;" @tab-click="handleClick">
+            <el-tab-pane :label="item.title" :name="item.code" v-for="item in sectors" :key="item" >
+                <QuestTables :dataList="tableData" :editstatus="isedit" v-on:curPage="loadQues(item.code,curPage)">
                 </QuestTables>
             </el-tab-pane>
-            <el-tab-pane label="云计算">
+            <!--<el-tab-pane label="云计算">-->
 
-                <QuestTables :dataList="tableData" :editstatus="isedit">
-                </QuestTables>
-            </el-tab-pane>
-            <el-tab-pane label="嵌入式">
+                <!--<QuestTables :dataList="tableData" :editstatus="isedit" v-on:curPage="loadQues("001",curPage)">-->
+                <!--</QuestTables>-->
+            <!--</el-tab-pane>-->
+            <!--<el-tab-pane label="嵌入式">-->
 
-                <QuestTables :dataList="tableData" :editstatus="isedit">
-                </QuestTables>
-            </el-tab-pane>
-            <el-tab-pane label="AI">
+                <!--<QuestTables :dataList="tableData" :editstatus="isedit" v-on:curPage="loadQues("001",curPage)">-->
+                <!--</QuestTables>-->
+            <!--</el-tab-pane>-->
+            <!--<el-tab-pane label="AI">-->
 
-                <QuestTables :dataList="tableData" :editstatus="isedit">
-                </QuestTables>
-            </el-tab-pane>
-            <el-tab-pane label="其他">
+                <!--<QuestTables :dataList="tableData" :editstatus="isedit"  v-on:curPage="loadQues("001",curPage)">-->
+                <!--</QuestTables>-->
+            <!--</el-tab-pane>-->
+            <!--<el-tab-pane label="其他">-->
 
-                <QuestTables :dataList="tableData" >
-                </QuestTables>
-            </el-tab-pane>
+                <!--<QuestTables :dataList="tableData" >-->
+                <!--</QuestTables>-->
+            <!--</el-tab-pane>-->
         </el-tabs>
     </div>
 </template>
@@ -57,6 +59,11 @@
 <script>
     import { Search } from '@element-plus/icons-vue';
     import QuestTables from '../components/QuestTables.vue';
+    import {getQues} from '../apis/topics'
+    import { localGet } from '../utils'
+    import {getSectors} from "../apis/sector";
+    import { ElMessage } from 'element-plus'
+    import {topicview} from "../apis/brand";
     export default {
         name:'AskAnswerViewer',
         components:{
@@ -64,17 +71,22 @@
         },
         mounted(){
             // document.querySelector(".el-tabs__content").style.padding="0px";
-            document.querySelector(".el-tabs__content").style.padding="0px";
-            document.querySelector(".el-input").style.margin="0px 0px 0px 0px";
-
+            this.loadSector();
+            this.loadQues("001",1);
+            this.loadProduct();
         },
         data() {
             return {
+                // cursector:'',
+                selectedTab:'001',
                 showeditbt:"查看个人贴子",
                 isedit:false,
                 input1:'',
                 tabPosition: 'left',
-                tableData:[
+                sectors:'',
+                tableData:[],
+                tableDataRec:[],
+                tableDataRecTemp:[
                     {
                         id:1,
                         date: '2016-05-03',
@@ -116,26 +128,121 @@
             }
         },
     created() {
-
+        // document.querySelector(".el-tabs__content").style.padding="0px";
+        // document.querySelector(".el-input").style.margin="0px 0px 0px 0px";
     },
         watch: {},
         computed: {},
         methods: {
-            publishtopic(){
-                this.$router.push({path: '/topiceditoradd/add'});
-            },
-            edittopic(){
-                if(this.isedit){
-                    this.isedit=false;
-                    this.showeditbt="查看个人贴子";
-                }else{
-                    this.isedit = true;
-                    this.showeditbt="查看所有贴子";
-                }
-                // this.$router.push({path: '/topiceditoradd/edit'});
-            }
+            handleClick (tab, event){
+        console.log(tab, event);
+            this.selectedTab = tab.props.name;
+                this.loadQues(tab.props.name,1);
         },
-        //
+            async loadSector(){
+        getSectors({}).then(
+            (res) => {
+            // console.log(res.data)
+            if(res.code == 200
+    )
+        {
+            this.sectors = res.data;
+            // console.log(this.user)
+        }
+    else
+        {
+            ElMessage({
+                message: res.message,
+                type: 'warning',
+            })
+        }
+    }
+    )
+    },
+    loadQues(sector, curPage){
+                // this.cursector = sector;
+        getQues({
+            ctxHeader: {
+                curPage: curPage,
+                pageSize: 5
+            }, ctxBody: {
+                sector: sector,
+                author: localGet("user"),
+                title: this.input1,
+                isedit: this.isedit
+            }
+        }).then(
+            (res) => {
+            // console.log(res.data)
+            if(res.code == 200
+    )
+        {
+            this.tableData = res.data;
+            // console.log(this.user)
+        }
+    else
+        {
+            ElMessage({
+                message: res.message,
+                type: 'warning',
+            })
+        }
+    }
+    )
+    }
+    ,
+    publishtopic()
+    {
+        this.$router.push({path: '/topiceditoradd/add'});
+    }
+    ,
+    edittopic()
+    {
+        if (this.isedit) {
+            if (localGet('user') == null) {
+                ElMessage({
+                    message: "请先登录后再操作个人帖子！",
+                    type: 'warning',
+                })
+                return;
+            }
+            this.isedit = false;
+            this.showeditbt = "查看个人贴子";
+        } else {
+            this.isedit = true;
+            this.showeditbt = "查看所有贴子";
+        }
+        // this.$router.push({path: '/topiceditoradd/edit'});
+    }
+    ,
+    showSelectVideo(index)
+    {
+        this.$router.push({path: '/topiceditor/' + index + "/read"});
+
+    }
+    ,
+    loadProduct()
+    {
+        topicview({}).then(
+            (res) => {
+            // console.log(res.data)
+            if(res.code == 200
+    )
+        {
+            this.tableDataRec = res.data;
+            // console.log(this.user)
+        }
+    else
+        {
+            ElMessage({
+                message: res.message,
+                type: 'warning',
+            })
+        }
+    }
+    )
+    }
+    }    //
         // methods:{
         //
         // }

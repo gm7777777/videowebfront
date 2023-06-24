@@ -14,9 +14,10 @@
                 <div class="infinite-list-wrapper" style="overflow: auto">
                 <p style="width:100%;margin-top: auto;font-weight:bolder;">向下滚动,刷新更多作品案例!</p>
                 <!--<ul v-infinite-scroll="scrollFun" @scroll="scrollFun" class="infinite-list list-box"  >-->
-                    <ul @scroll="scrollFun" class="infinite-list list-box"  >
-                <WaterFullList :pbList="pbList" :loading="loading" :noMore="noMore" ref="waterfullList" v-on:compheight="calheight"></WaterFullList>
-                </ul>
+                    <!--<ul @scroll="scrollFun" class="infinite-list list-box"  >-->
+                <!--<WaterFullList :pbList="pbList" :loading="loading" :noMore="noMore" ref="waterfullList" v-on:compheight="calheight"></WaterFullList>-->
+                        <WaterFullList :pbList="pbList" :loading="loading" :noMore="noMore" ref="waterfullList" ></WaterFullList>
+                <!--</ul>-->
                 <!--<Spin fix v-if="spinShow">-->
                 <!--<Icon type="ios-loading" size=18 class="demo-spin-icon-load"></Icon>-->
                 <!--<div>Loading</div>-->
@@ -48,6 +49,11 @@
 
 <script>
     import WaterFullList from "../components/WaterFullList.vue";
+    import {getCases} from '../apis/cases';
+    import { ElMessage } from 'element-plus';
+    import {getSectors} from "../apis/sector";
+    import {treeCase} from '../apis/cases';
+
     export default {
         name:'Introduction',
         components:{
@@ -56,6 +62,16 @@
         mounted(){
             // document.querySelector(".el-tabs__content").style.padding="0px";
             document.querySelector(".el-tabs__content").style.padding="0px";
+            // this.loadSector();
+            // this.loadCasesByPage();
+            // addListDataFun();
+            this.addList = [];
+            // this.$refs.waterfullList.waterFall("#tabContainer", ".tab-item")
+            this.loadCasesAddList();
+            this.loadTreeCase();
+        },
+        created(){
+
         },
         data() {
             return {
@@ -64,25 +80,29 @@
                 activeName: 'first',
                 years:new Date().getFullYear()-2010,
                 spinShow:false,
+                sectors:'',
                 selfsrc:"src/assets/images/background/self.jpg",
+                pbList:[],
                 //瀑布流数据
-                pbList: [
+                pbListTemp: [
                     {
                         // url: "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg3.doubanio.com%2Fview%2Fphoto%2Fm%2Fpublic%2Fp2650049201.jpg&refer=http%3A%2F%2Fimg3.doubanio.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1664935370&t=d4bf3e4d352c277a1bdebfcc8fda959f",
-                        url:"src/assets/images/about/f02.jpg",
+                        // url:"src/assets/images/about/f02.jpg",
+                        piclink:"http://192.168.56.1:5007/docs/self.jpg",
                         id:1,
                         title:"123",
                         area:"大数据"
                     },
                     {
                         // url: "https://img1.baidu.com/it/u=2911909188,130959360&fm=253&fmt=auto&app=138&f=JPEG?w=440&h=641",
-                        url:"src/assets/images/about/f02.jpg",
+                        // url:"src/assets/images/about/f02.jpg",
+                        piclink:"http://192.168.56.1:5007/docs/self.jpg",
                             id:2,
                         title:"234",
                         area:"手机端"
                     },
                     {
-                        url: "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg3.doubanio.com%2Fview%2Fphoto%2Fm%2Fpublic%2Fp2650049201.jpg&refer=http%3A%2F%2Fimg3.doubanio.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1664935370&t=d4bf3e4d352c277a1bdebfcc8fda959f",
+                        piclink: "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg3.doubanio.com%2Fview%2Fphoto%2Fm%2Fpublic%2Fp2650049201.jpg&refer=http%3A%2F%2Fimg3.doubanio.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1664935370&t=d4bf3e4d352c277a1bdebfcc8fda959f",
                         id:3,
                         title:"云计算",
                         area:"云计算"
@@ -138,7 +158,8 @@
                 //         url: "https://img1.baidu.com/it/u=2911909188,130959360&fm=253&fmt=auto&app=138&f=JPEG?w=440&h=641",
                 //     }
                 // ],
-                addList:[
+                addList:[],
+                addListTemp:[
                     {
                         url: "https://img1.baidu.com/it/u=2911909188,130959360&fm=253&fmt=auto&app=138&f=JPEG?w=440&h=641",
                         id:7,
@@ -160,7 +181,8 @@
                 ],
                 bottomMain:true,
                 filterText: '',
-                data: [
+                data:[],
+                datatemp: [
                     {
                         id: 1,
                         label: '一级 1',
@@ -231,6 +253,103 @@
             },
         },
         methods:{
+            loadTreeCase(){
+                treeCase({}).then(
+            (res) => {
+            // console.log(res.data)
+            if(res.code == 200){
+            // this.sectors = res.data;
+            this.data = res.data;
+            // console.log(this.user)
+        }else{
+            ElMessage({
+                message: res.message,
+                type: 'warning',
+            })
+        }
+    })
+    },
+            async loadSector(){
+        getSectors({}).then(
+            (res) => {
+            // console.log(res.data)
+            if(res.code == 200){
+            // this.sectors = res.data;
+            this.sectors = res.data;
+            // console.log(this.user)
+        }else{
+            ElMessage({
+                message: res.message,
+                type: 'warning',
+            })
+        }
+        })
+            },
+            async loadCasesByPage(){
+
+                getCases({
+                    ctxHeader:{
+                        pageSize:3,
+                        index:this.pbList.length
+                    }
+                }).then(
+                    (res) => {
+                    // console.log(res.data)
+                    if(res.code == 200){
+                        // let temp = [];
+                    // for(let i = 0 ;i<res.data.length;i++){
+                    // let item = res.data[i];
+                    // for (let j =0 ; j<this.sectors.length;j++) {
+                    // if (item.sectorcode == this.sectors[j].code) {
+                    //     item['area'] = this.sectors[j].title;
+                    // }
+                    //
+                    // }
+                    //     temp.push(item);
+                    //
+                    // }
+                        this.pbList = res.data;
+            // this.$refs.waterfullList.waterFall("#tabContainer", ".tab-item")
+            // this.$refs.waterfullList.waterFallAdd("#tabContainer", ".tab-item");
+                }else{
+                    ElMessage({
+                        message: res.message,
+                        type: 'error',
+                    })
+                }
+            })
+            },
+    loadCasesAddList(){
+        let num = 0;
+        if(null!=this.pbList){
+            num=this.pbList.length;
+        }
+        getCases({
+            ctxBody:{
+                pageSize:3,
+                index:num
+            }
+        }).then(
+            (res) => {
+            // console.log(res.data)
+            if(res.code == 200){
+            for(let i = 0 ;i<res.data.length;i++){
+                let item = res.data[i];
+                // for (let sector in sectors) {
+                //     if (item.sectorcode == sector.code) {
+                //         item['area'] = sector.title;
+                //     }
+                // }
+                this.addList.push(item);
+            }
+        }else{
+            ElMessage({
+                message: res.message,
+                type: 'error',
+            })
+        }
+    })
+    },
             handleNodeClick(data){
                 if(data['children'] == null) {
                     this.$router.push({path: '/productcenterdetail/' + data['id']});
@@ -243,14 +362,14 @@
             handleClick(tab, event) {
                 console.log(tab, event)
             },
-            calheight(height){
+            // calheight(height){
                 // if(1000>=height&&height>500) {
                 //
                 //     document.querySelector(".list-box").style.height = height + 'px';
                 // }
                 // this.$router.go(0);
                 // document.querySelector(".list-box").style.height='1500px';
-            },
+            // },
             scrollFun(e) {
                 const  offsetHeight= e.target.offsetHeight
                 const  scrollHeight= e.target.scrollHeight
@@ -264,9 +383,11 @@
                                 return;
                             }
                             this.pbList = this.pbList.concat(this.addList);
+                            this.addList = [];
+                            this.loadCasesAddList();
                         this.bottomMain = true
                         this.$nextTick(()=>{
-                            this.$refs.waterfullList.waterFallAdd("#tabContainer", ".tab-item")
+                            this.$refs.waterfullList.waterFallAdd("#tabContainer", ".tab-item");
                         // this.$Spin.hide()
                         this.spinShow = false;
                         this.loading = false;
@@ -310,7 +431,9 @@
             //     }
             // });
                 setTimeout(() => {
-                    this.pbList = this.pbList.concat(this.addList)
+                    this.pbList = this.pbList.concat(this.addList);
+                    this.addList = [];
+                    this.loadCasesAddList();
                 this.bottomMain = true
                 this.$nextTick(()=>{
                     this.$refs.waterfullList.waterFall("#tabContainer", ".tab-item")

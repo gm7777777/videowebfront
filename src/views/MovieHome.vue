@@ -22,6 +22,7 @@
           <br>网站前台使用vue3+element plus开发打包后发布nginx
           <br>后台使用springcloud+mongodb制作以及基于python+机器学习的关注度推荐算法
           <br>GitHub地址:<a href="https://github.com/gm7777777/videowebfront" target="_blank">https://github.com/gm7777777/videowebfront</a>
+          <br><a href="https://github.com/gm7777777/videowebfront" target="_blank">https://github.com/gm7777777/webbackend</a>
         </p>
       </div>
 

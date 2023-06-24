@@ -1,36 +1,37 @@
 <template>
-            <el-table :data="dataList" style="width:100%;height: 100%;" :show-header="flag" row-style="width:100%">
-
+    <el-table :data="dataList" style="width:100%;height: 100%;" :show-header="flag" row-style="width:100%">
                 <!--<el-table-column prop="address"  fixed="left" min-width="300"/>-->
                 <el-table-column prop="pic" width="200">
                     <template #default="scope">
                         <div style="display: flex; align-items: center">
-                            <el-image :src="scope.row.url" fit="contain" @click="clickTableRow(scope.row.id)"/>
+                            <el-image :src="scope.row.logosrc" fit="contain" @click="clickTableRow(scope.row.id)"/>
                         </div>
                     </template>
                 </el-table-column>
                 <el-table-column prop="th" min-width="300">
                     <template #default="scope">
                         <div style="width:100%;height:50%" @click="clickTableRow(scope.row.id)">
-                            {{scope.row.address}}
+                            {{scope.row.title}}
                         </div>
                         <el-row style="height:50%" @click="clickTableRow(scope.row.id)">
                         <div style="display: flex; align-items: left;width:50%">
-                            IP:{{scope.row.sourceIp}}
+                            IP:{{scope.row.sourceip}}
                         </div>
                         <div style="display: flex; align-items: left;width:50%">
-                            <el-icon><StarFilled /></el-icon>{{scope.row.cnum}}
+                            <el-icon><StarFilled /></el-icon>{{scope.row.remarksnum}}
                         </div>
                         </el-row>
                     </template>
                 </el-table-column>
 
-                <el-table-column prop="date"  width="180" fixed="right"/>
-                <el-table-column prop="name"  fixed="right" width="180" />
+                <el-table-column prop="date" :formatter="dateFormat"  width="180" fixed="right"/>
+        <!--<el-table-column prop="createdate"  width="180" fixed="right"/>-->
+        <!--</el-table-column>-->
+                <el-table-column prop="author"  fixed="right" width="180" />
             </el-table>
     <el-pagination
-            v-model:current-page="currentPage3"
-            v-model:page-size="pageSize3"
+            v-model:current-page="currentPage"
+            v-model:page-size="pageSize"
             :small="small"
             :disabled="disabled"
             :background="background"
@@ -43,6 +44,7 @@
 
 <script>
     // import dayjs from 'dayjs'
+    // import {getQues} from '../apis/topics'
     export default {
         name: "QuestTables",
         components:{
@@ -51,8 +53,8 @@
         data(){
             return{
                 flag:false,
-                currentPage3:5,
-                pageSize3:100,
+                currentPage:1,
+                pageSize:5,
                 samll:false,
                 disabled:false,
                 background:false,
@@ -76,11 +78,25 @@
         // }
     },
     methods:{
+        dateFormat(row){
+            let time = new Date(row.createdate)// row 表示一行数据, createdTime 表示要格式化的字段名称
+            if(!time){
+                return ''
+            }
+            let year = time.getFullYear()
+            let month = this.dateIfAddZero(time.getMonth()+1)
+            let day = this.dateIfAddZero(time.getDate())
+            return year + '-' + month + '-' + day+ ' '
+        },
+        dateIfAddZero(time){
+            return time < 10 ? '0'+ time : time
+        },
         handleSizeChange (val) {
             console.log(`${val} items per page`)
         },
         handleCurrentChange(val){
             console.log(`current page: ${val}`)
+            this.$emit('curPage',val);
         },
         clickTableRow(val){
             if(this.editstatus) {

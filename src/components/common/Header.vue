@@ -112,7 +112,7 @@ import { useStore } from 'vuex'
 import { localRemove } from '../../utils'
 import { getUserInfo } from '../../apis/login'
 import { ElMessage } from 'element-plus'
-
+import { localGet } from '../../utils'
 
 export default {
     name: "Header",
@@ -127,7 +127,8 @@ export default {
         const isLogining = ref(store.state.appStore.isLogining)
         
         const loginOut = function() {
-          localRemove('token')
+          localRemove('token');
+            localRemove('user');
           window.location.reload()
         }
 
@@ -170,22 +171,25 @@ export default {
 
         getUserInfo() {
           if (this.isLogining) {
+              this.user = localGet("user")
             // 已登录用户获取用户名
-            getUserInfo().then(
-              (res) => {
-                // console.log(res.data)
-                if (res.data.code == 200) {
-                  this.store.state.appStore.user = res.data.data
-                  this.user = this.store.state.appStore.user
-                  // console.log(this.user)
-                } else {
-                ElMessage({
-                message: res.data.message,
-                type: 'warning',
-                })
-            }
-              }
-            )
+            // getUserInfo().then(
+            //   (res) => {
+            //     // console.log(res.data)
+            //     if (res.code == 200) {
+            //       this.store.state.appStore.user = res.data.data
+            //       this.user = this.store.state.appStore.user
+            //       // console.log(this.user)
+            //     } else {
+            //     ElMessage({
+            //     message: res.data.message,
+            //     type: 'warning',
+            //     })
+            // }
+            //   }
+            // )
+
+
           } 
         },
 

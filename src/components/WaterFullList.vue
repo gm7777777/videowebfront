@@ -1,37 +1,40 @@
 <template>
+    <ul @scroll="scrollFun" class="infinite-list list-box"  >
     <div class="tab-container" id="tabContainer">
         <!--<el-scrollbar>-->
         <div class="tab-item" v-for="(item, index) in pbList" :key="index"  @click="routerDir(item.id)">
             <el-tooltip
                     effect="dark"
-                    :content="item.area+`:`+item.title"
+                    :content="item.area+`:`+item.name"
                     placement="bottom"
             >
             <!--<img :src="item.url" style="border-top-right-radius: 15px;border-top-left-radius: 15px;-->
             <!--border-bottom-left-radius: 15px;border-bottom-right-radius: 15px" />-->
-                <img :src="item.url" style="border-top-right-radius: 15px;border-top-left-radius: 15px;"/>
+                <img :src="item.piclink" style="border-top-right-radius: 15px;border-top-left-radius: 15px;"/>
             <!--<p style="position:absolute;bottom:5px;width:100%;">{{item.area}}</p>>-->
             <!--<p style="width:100%;font-size:x-small">{{item.title}}</p>-->
             </el-tooltip>
 
             <p style="position:absolute;bottom:20%;width:100%;color:white;">{{item.area}}</p>
-            <p style="width:100%;font-size:x-small">{{item.title}}</p>
+            <p style="width:100%;font-size:x-small">{{item.name}}</p>
         </div>
             <p v-if="loading" style="width:100%">Loading...</p>
             <p v-if="noMore" style="width:100%">No more</p>
         <!--<Spin size="large" fix v-if="spinShow"></Spin>-->
         <!--</el-scrollbar>-->
     </div>
+    </ul>
 </template>
 
 <script>
+    import {getCases} from '../apis/cases';
     export default {
         name:'WaterFullList',
         props:{
-            pbList:{
-                type:Array,
-                default:()=>{return []}
-        },
+        //     pbList:{
+        //         type:Array,
+        //         default:()=>{return []}
+        // },
         loading:{
                 type:Boolean,
                 default:false
@@ -44,16 +47,120 @@
     data() {
         return {
             index:0,
+            pbList:[],
+            addList:[],
+            loading:true,
+            noMore:false,
         };
     },
     mounted() {
         // this.setTimeout(this.waterFall("#tabContainer", ".tab-item"),100);
-        this.$nextTick(()=>{
-            this.waterFall("#tabContainer", ".tab-item"); //实现瀑布流
-    });
+
+    this.loadCasesByPage();
 
     },
     methods: {
+        scrollFun(e) {
+            const  offsetHeight= e.target.offsetHeight
+            const  scrollHeight= e.target.scrollHeight
+            const  scrollTop= e.target.scrollTop
+            if((scrollHeight - (offsetHeight+scrollTop)) < 100){
+                // if(this.bottomMain){
+                //     this.bottomMain = false
+                    setTimeout(() => {
+                    //     if(this.addList == undefined ||this.addList == null || this.addList.length <= 0){
+                    //     this.noMore = true;
+                    //     return;
+                    // }
+                    this.pbList = this.pbList.concat(this.addList);
+                    this.addList = [];
+                    this.loadCasesAddList();
+                    // this.loadCasesByPage();
+                    // this.bottomMain = true
+                    this.$nextTick(()=>{
+                       this.waterFallAdd("#tabContainer", ".tab-item");
+                    // this.$Spin.hide()
+                    this.spinShow = false;
+                    this.loading = false;
+                })
+                },500);
+                // }
+            }
+
+
+        },
+        loadCasesAddList(){
+            // let num = 0;
+            // if(null!=this.pbList){
+            //     num=this.pbList.length;
+            // }
+            getCases({
+                ctxHeader:{
+                    pageSize:3,
+                    index:this.pbList.length
+                }
+            }).then(
+                (res) => {
+                // console.log(res.data)
+                if(res.code == 200){
+                    if(null==res.data||res.data.length<1){
+                        this.noMore = true;
+                        return;
+                    }
+                for(let i = 0 ;i<res.data.length;i++){
+                    let item = res.data[i];
+                    // for (let sector in sectors) {
+                    //     if (item.sectorcode == sector.code) {
+                    //         item['area'] = sector.title;
+                    //     }
+                    // }
+                    this.addList.push(item);
+                }
+            }else{
+                ElMessage({
+                    message: res.message,
+                    type: 'error',
+                })
+            }
+        })
+        },
+            async loadCasesByPage(){
+
+        getCases({
+            ctxHeader:{
+                pageSize:3,
+                index:this.pbList.length
+            }
+        }).then(
+            (res) => {
+            // console.log(res.data)
+            if(res.code == 200){
+            // let temp = [];
+            // for(let i = 0 ;i<res.data.length;i++){
+            // let item = res.data[i];
+            // for (let j =0 ; j<this.sectors.length;j++) {
+            // if (item.sectorcode == this.sectors[j].code) {
+            //     item['area'] = this.sectors[j].title;
+            // }
+            //
+            // }
+            //     temp.push(item);
+            //
+            // }
+            this.pbList = res.data;
+            // this.$refs.waterfullList.waterFall("#tabContainer", ".tab-item")
+            // this.$refs.waterfullList.waterFallAdd("#tabContainer", ".tab-item");
+                setTimeout(this.$nextTick(()=>{
+                    this.waterFall("#tabContainer", ".tab-item"); //实现瀑布流
+            }),1500);
+        }else{
+            ElMessage({
+                message: res.message,
+                type: 'error',
+            })
+        }
+    })
+    },
         waterFallAdd(
             wrapIdName,
             contentIdName,
@@ -230,5 +337,45 @@
         padding: 0;
         margin: 0;
         list-style: none;
+    }
+
+    .list-box{
+        position: relative;
+        width: 100%;
+        /*height: calc(100vh - 240px);*/
+        height:700px;
+        background: white;
+        padding: 10px 20px 5px 2px;
+        /*margin-top: 20px;*/
+        box-sizing: border-box;
+        overflow: auto;
+        overflow-x:hidden;
+        background:transparent;
+    }
+    /* 整个滚动条 */
+    ::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+    }
+
+    /* 滚动条上的滚动滑块 */
+    ::-webkit-scrollbar-thumb {
+        background-color: #49b1f5;
+        /* 关键代码 */
+        background-image: -webkit-linear-gradient(45deg,
+        rgba(255, 255, 255, 0.4) 25%,
+        transparent 25%,
+        transparent 50%,
+        rgba(255, 255, 255, 0.4) 50%,
+        rgba(255, 255, 255, 0.4) 75%,
+        transparent 75%,
+        transparent);
+        border-radius: 32px;
+    }
+
+    /* 滚动条轨道 */
+    ::-webkit-scrollbar-track {
+        background-color: #dbeffd;
+        border-radius: 32px;
     }
 </style>
